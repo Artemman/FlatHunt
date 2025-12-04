@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="flathunt.client/flathunt.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="FlatHunt.Server/FlatHunt.Server.csproj" />
+</Solution>
