@@ -11,5 +11,7 @@
         public int FloorCount { get; set; }
 
         public int AreaTotal { get; set; }
+
+        public ICollection<Advertisement> Advertisements { get; set; }
     }
 }

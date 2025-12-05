@@ -51,7 +51,7 @@ namespace FlatHunt.Server.Migrations.Identity
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.Advertisement", b =>
@@ -116,7 +116,7 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasIndex("FlatSourceId");
 
-                    b.ToTable("Advertisements");
+                    b.ToTable("Advertisements", (string)null);
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.Flat", b =>
@@ -141,7 +141,7 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasKey("Id");
 
-                    b.ToTable("Flats");
+                    b.ToTable("Flats", (string)null);
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.FlatSource", b =>
@@ -161,7 +161,7 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasKey("Id");
 
-                    b.ToTable("FlatSources");
+                    b.ToTable("FlatSources", (string)null);
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.User", b =>
