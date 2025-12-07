@@ -4,16 +4,19 @@ using FlatHunt.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FlatHunt.Server.Migrations.Identity
+namespace FlatHunt.Server.Migrations.Parser
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251207105947_AddCityModels")]
+    partial class AddCityModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace FlatHunt.Server.Migrations.Identity
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.Advertisement", b =>
@@ -116,7 +119,33 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasIndex("FlatSourceId");
 
-                    b.ToTable("Advertisements", (string)null);
+                    b.ToTable("Advertisements");
+                });
+
+            modelBuilder.Entity("FlatHunt.Server.Models.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("FlatFyCityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LunCityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LunCityId");
+
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.Flat", b =>
@@ -141,7 +170,7 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasKey("Id");
 
-                    b.ToTable("Flats", (string)null);
+                    b.ToTable("Flats");
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.FlatSource", b =>
@@ -161,7 +190,39 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     b.HasKey("Id");
 
-                    b.ToTable("FlatSources", (string)null);
+                    b.ToTable("FlatSources");
+                });
+
+            modelBuilder.Entity("FlatHunt.Server.Models.LunCity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GeoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GeoType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LunCities");
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.User", b =>
@@ -374,7 +435,7 @@ namespace FlatHunt.Server.Migrations.Identity
             modelBuilder.Entity("FlatHunt.Server.Models.Advertisement", b =>
                 {
                     b.HasOne("FlatHunt.Server.Models.Flat", "Flat")
-                        .WithMany()
+                        .WithMany("Advertisements")
                         .HasForeignKey("FlatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -388,6 +449,15 @@ namespace FlatHunt.Server.Migrations.Identity
                     b.Navigation("Flat");
 
                     b.Navigation("FlatSource");
+                });
+
+            modelBuilder.Entity("FlatHunt.Server.Models.City", b =>
+                {
+                    b.HasOne("FlatHunt.Server.Models.LunCity", "LunCity")
+                        .WithMany()
+                        .HasForeignKey("LunCityId");
+
+                    b.Navigation("LunCity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -439,6 +509,11 @@ namespace FlatHunt.Server.Migrations.Identity
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FlatHunt.Server.Models.Flat", b =>
+                {
+                    b.Navigation("Advertisements");
                 });
 
             modelBuilder.Entity("FlatHunt.Server.Models.FlatSource", b =>

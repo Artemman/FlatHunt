@@ -16,6 +16,10 @@ namespace FlatHunt.Server.Data
 
         public DbSet<Flat> Flats => Set<Flat>();
 
+        public DbSet<City> Cities => Set<City>();
+
+        public DbSet<LunCity> LunCities => Set<LunCity>();
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder b)
@@ -37,6 +41,20 @@ namespace FlatHunt.Server.Data
                 cfg.Property(x => x.Currency).HasMaxLength(50);
                 cfg.Property(x => x.Address).HasMaxLength(200);
                 cfg.Property(x => x.RawData).HasMaxLength(500);
+            });
+
+            b.Entity<City>(cfg =>
+            {
+                cfg.HasKey(x => x.Id);
+                cfg.Property(x => x.Name).HasMaxLength(50);
+            });
+
+            b.Entity<LunCity>(cfg =>
+            {
+                cfg.HasKey(x => x.Id);
+                cfg.Property(x => x.Name).HasMaxLength(50);
+                cfg.Property(x => x.GeoType).HasMaxLength(50);
+                cfg.Property(x => x.Url).HasMaxLength(150);
             });
         }
     }
