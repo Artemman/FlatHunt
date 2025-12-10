@@ -33,5 +33,7 @@
         public required Flat Flat { get; set; }
 
         public int FlatId { get; set; }
+
+        //TODO add geo, contacts, meta data hus/electricity etc, commission
     }
 }

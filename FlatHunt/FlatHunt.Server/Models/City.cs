@@ -1,9 +1,7 @@
 ﻿namespace FlatHunt.Server.Models
 {
-    public class City
+    public class City : Entity
     {
-        public int Id { get; set; }
-
         public required string Name { get; set; }
 
         public int? LunCityId { get; set; }
