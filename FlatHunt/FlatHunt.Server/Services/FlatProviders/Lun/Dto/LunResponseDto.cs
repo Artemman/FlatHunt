@@ -33,7 +33,7 @@
 
         public int FloorCount { get; set; }
 
-        public int? AreaTotal { get; set; }
+        public decimal? AreaTotal { get; set; }
 
     }
 }

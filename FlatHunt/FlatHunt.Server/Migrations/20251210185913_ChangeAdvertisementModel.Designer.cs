@@ -4,16 +4,19 @@ using FlatHunt.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FlatHunt.Server.Migrations.Identity
+namespace FlatHunt.Server.Migrations.Parser
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251210185913_ChangeAdvertisementModel")]
+    partial class ChangeAdvertisementModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,7 @@ namespace FlatHunt.Server.Migrations.Identity
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("FlatId")
+                    b.Property<int>("FlatId")
                         .HasColumnType("int");
 
                     b.Property<int>("FlatSourceType")
@@ -151,8 +154,8 @@ namespace FlatHunt.Server.Migrations.Identity
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("AreaTotal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("AreaTotal")
+                        .HasColumnType("int");
 
                     b.Property<int>("Floor")
                         .HasColumnType("int");
@@ -411,7 +414,9 @@ namespace FlatHunt.Server.Migrations.Identity
                 {
                     b.HasOne("FlatHunt.Server.Models.Flat", "Flat")
                         .WithMany("Advertisements")
-                        .HasForeignKey("FlatId");
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Flat");
                 });

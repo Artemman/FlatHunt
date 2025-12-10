@@ -1,12 +1,8 @@
 ﻿namespace FlatHunt.Server.Models
 {
-    public class Advertisement
+    public class Advertisement : Entity
     {
-        public int Id { get; set; }
-
-        public required FlatSource FlatSource { get; set; }
-
-        public int FlatSourceId { get; set; }
+        public FlatSourceType FlatSourceType { get; set; }
 
         public required string ExternalId { get; set; }
 
@@ -30,9 +26,9 @@
 
         public bool IsOwner { get; set; }
 
-        public required Flat Flat { get; set; }
+        public Flat? Flat { get; set; }
 
-        public int FlatId { get; set; }
+        public int? FlatId { get; set; }
 
         //TODO add geo, contacts, meta data hus/electricity etc, commission
     }

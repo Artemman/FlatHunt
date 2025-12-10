@@ -10,8 +10,6 @@ namespace FlatHunt.Server.Data
     {
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
-        public DbSet<FlatSource> FlatSources =>  Set<FlatSource>();
-
         public DbSet<Advertisement> Advertisements => Set<Advertisement>();
 
         public DbSet<Flat> Flats => Set<Flat>();

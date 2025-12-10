@@ -9,5 +9,7 @@ namespace FlatHunt.Server.Repositories.Interfaces
         TEntity? Add(TEntity entity);
 
         Task<TEntity?> GetById(int entityId, params Expression<Func<TEntity, object>>[] includes);
+
+        Task SaveChanges();
     }
 }

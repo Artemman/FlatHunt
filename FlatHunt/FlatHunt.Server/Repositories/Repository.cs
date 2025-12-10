@@ -44,12 +44,17 @@ namespace FlatHunt.Server.Repositories
             {
                 foreach (var include in includes)
                 {
-                    query.Include(include);
+                    query = query.Include(include);
                 }
             }
             
 
             return query;
+        }
+
+        public Task SaveChanges()
+        {
+            return _context.SaveChangesAsync();
         }
     }
 }

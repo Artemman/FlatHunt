@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlatHunt.Server.Controllers
 {
+    //todo add auth
     [ApiController]
     [Route("flat-sync")]
     public class FlatSyncController : ControllerBase

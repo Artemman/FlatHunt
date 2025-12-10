@@ -1,4 +1,6 @@
 using FlatHunt.Server.Data;
+using FlatHunt.Server.Repositories;
+using FlatHunt.Server.Repositories.Interfaces;
 using FlatHunt.Server.Services.FlatProviders.Lun.Interfaces;
 using FlatHunt.Server.Services.Parser;
 using FlatHunt.Server.Services.Parser.Interfaces;
@@ -18,12 +20,15 @@ namespace FlatHunt.Server
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            //TODO separate on services, clients and etc
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 
             builder.Services.AddTransient<IFlatSyncService, FlatSyncService>();
-            builder.Services.AddTransient<IFlatParserService, LunFlatParserService>();
+            builder.Services.AddTransient<ILunFlatParserService, LunFlatParserService>();
+
 
             var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer(new JsonSerializerOptions
             {
@@ -43,6 +48,9 @@ namespace FlatHunt.Server
                   //todo add to settings 
                   client.BaseAddress = new Uri("https://lun.ua/");
               });
+
+            builder.Services.AddTransient<ICityRepository, CityRepository>();
+            builder.Services.AddTransient<IAdvertisementRepository, AdvertisementRepository>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
