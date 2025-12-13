@@ -1,15 +1,5 @@
-using FlatHunt.Server.Data;
-using FlatHunt.Server.Repositories;
-using FlatHunt.Server.Repositories.Interfaces;
-using FlatHunt.Server.Services.FlatProviders.Lun.Interfaces;
-using FlatHunt.Server.Services.Parser;
-using FlatHunt.Server.Services.Parser.Interfaces;
-using FlatHunt.Server.Services.Sync;
-using FlatHunt.Server.Services.Sync.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Refit;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using FlatHunt.Server.DI;
+using Microsoft.Extensions.Configuration;
 
 namespace FlatHunt.Server
 {
@@ -19,40 +9,10 @@ namespace FlatHunt.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            //TODO separate on services, clients and etc
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
-
-            builder.Services.AddTransient<IFlatSyncService, FlatSyncService>();
-            builder.Services.AddTransient<ILunFlatParserService, LunFlatParserService>();
-
-
-            var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer(new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                Converters =
-                {
-                    new JsonStringEnumConverter()
-                },
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                NumberHandling = JsonNumberHandling.AllowReadingFromString
-            }));
-
-            //TODO add handler
-            builder.Services.AddRefitClient<ILunClient>(refitSettings)
-              .ConfigureHttpClient((_, client) =>
-              {
-                  //todo add to settings 
-                  client.BaseAddress = new Uri("https://lun.ua/");
-              });
-
-            builder.Services.AddTransient<ICityRepository, CityRepository>();
-            builder.Services.AddTransient<IAdvertisementRepository, AdvertisementRepository>();
+            ConfigureServices(builder.Services, builder.Configuration);
 
             builder.Services.AddControllers();
+            AuthRegistrator.AddAuth(builder.Services, builder.Configuration);
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -69,7 +29,9 @@ namespace FlatHunt.Server
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
 
             app.MapControllers();
@@ -77,6 +39,14 @@ namespace FlatHunt.Server
             app.MapFallbackToFile("/index.html");
 
             app.Run();
+        }
+
+        private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        {
+            DbContextRegistrator.ConfigureDbContext(services, configuration);
+            FlatHuntParserRegistrator.AddParserServices(services);
+            FlatSourceClientsRegistrator.AddFlatSourceClients(services, configuration);
+            RepositoriesRegistrator.AddRepositories(services);
         }
     }
 }

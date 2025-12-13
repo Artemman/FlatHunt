@@ -1,13 +1,16 @@
+using FlatHunt.Server.Auth;
 using FlatHunt.Server.Models;
 using FlatHunt.Server.Services.Sync.Interfaces;
 using FlatHunt.Server.Services.Sync.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlatHunt.Server.Controllers
 {
-    //todo add auth
+    
     [ApiController]
-    [Route("flat-sync")]
+    [Route("api/flat-sync")]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Broker}")]
     public class FlatSyncController : ControllerBase
     {
         private readonly IFlatSyncService _flatSyncService;
