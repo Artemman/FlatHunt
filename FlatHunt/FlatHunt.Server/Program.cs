@@ -47,6 +47,7 @@ namespace FlatHunt.Server
             FlatHuntParserRegistrator.AddParserServices(services);
             FlatSourceClientsRegistrator.AddFlatSourceClients(services, configuration);
             RepositoriesRegistrator.AddRepositories(services);
+            FlatHuntBusinessRegistrator.ConfigureServices(services);
         }
     }
 }

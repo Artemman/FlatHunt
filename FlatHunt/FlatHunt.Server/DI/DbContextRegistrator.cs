@@ -21,7 +21,8 @@ namespace FlatHunt.Server.DI
             services.AddIdentityCore<User>(o => { o.User.RequireUniqueEmail = true; })
             .AddRoles<IdentityRole<int>>()
             .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddSignInManager();
 
             services.AddHostedService<RoleSeeder>();
         }

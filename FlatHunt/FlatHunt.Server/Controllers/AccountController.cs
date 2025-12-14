@@ -50,5 +50,35 @@ namespace FlatHunt.Server.Controllers
                 RefreshToken = refresh
             });
         }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken(string refreshToken)
+        {
+            var result = await _jwtTokenService.RefreshAsync(refreshToken);
+
+            return result is null
+                    ? Unauthorized()
+                    : Ok(new
+                    {
+                        access = result.Value.accessToken,
+                        refresh = result.Value.refreshToken
+                    });
+        }
+
+        [HttpPost("logout")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout(string refreshToken)
+        {
+            await _jwtTokenService.RevokeAsync(refreshToken);
+            return Ok();
+        }
+
+#if DEBUG
+        [Authorize]
+        [HttpGet("whoami")]
+        public IActionResult WhoAmI() =>
+            Ok(User.Claims.Select(c => new { c.Type, c.Value }));
+#endif
     }
 }

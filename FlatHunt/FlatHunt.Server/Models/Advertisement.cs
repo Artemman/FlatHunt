@@ -31,5 +31,6 @@
         public int? FlatId { get; set; }
 
         //TODO add geo, contacts, meta data hus/electricity etc, commission
+        //TODO add city
     }
 }

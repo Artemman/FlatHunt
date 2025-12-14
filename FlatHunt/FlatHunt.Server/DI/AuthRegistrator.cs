@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using FlatHunt.Server.Auth;
 using FlatHunt.Server.Services.Auth;
-using Microsoft.IdentityModel.Tokens;
-using FlatHunt.Server.Services.Auth.Models;
 using FlatHunt.Server.Services.Auth.Interfaces;
+using FlatHunt.Server.Services.Auth.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FlatHunt.Server.DI
 {
@@ -21,9 +22,12 @@ namespace FlatHunt.Server.DI
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
 
+           
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                             .AddJwtBearer(opt =>
                             {
+                                opt.MapInboundClaims = false;
                                 opt.TokenValidationParameters = new()
                                 {
                                     ValidIssuer = jwt.Issuer,
@@ -32,7 +36,9 @@ namespace FlatHunt.Server.DI
                                     ValidateIssuerSigningKey = true,
                                     ValidateIssuer = true,
                                     ValidateAudience = true,
-                                    ClockSkew = TimeSpan.Zero
+                                    ClockSkew = TimeSpan.Zero,
+                                    RoleClaimType = CustomClaimTypes.Role,
+                                    NameClaimType = CustomClaimTypes.Name
                                 };
                             });
 

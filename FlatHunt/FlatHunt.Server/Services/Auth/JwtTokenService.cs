@@ -97,14 +97,16 @@ namespace FlatHunt.Server.Services.Auth
 
         private static List<Claim> GetUserClaims(User user, IList<string> roles)
         {
+            //todo move to claims service
             var claims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-                new(ClaimTypes.Name, user.UserName ?? string.Empty)
-            }
-            ;
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+                new(JwtRegisteredClaimNames.Name, user.UserName ?? string.Empty)
+            };
+            
+            claims.AddRange(roles.Select(r => new Claim(CustomClaimTypes.Role, r)));
+
             return claims;
         }
 

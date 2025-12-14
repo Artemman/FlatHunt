@@ -1,7 +1,6 @@
 ﻿using FlatHunt.Server.Repositories;
 using FlatHunt.Server.Repositories.Interfaces;
 
-
 namespace FlatHunt.Server.DI
 {
     public static class RepositoriesRegistrator
@@ -10,6 +9,7 @@ namespace FlatHunt.Server.DI
         {
             services.AddTransient<ICityRepository, CityRepository>();
             services.AddTransient<IAdvertisementRepository, AdvertisementRepository>();
+            services.AddTransient<IFlatRepository, FlatRepository>();
         }
     }
 }

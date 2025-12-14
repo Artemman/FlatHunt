@@ -1,0 +1,60 @@
+:host {
+  display: block;
+  height: 100%;
+  min-height: 100vh;
+}
+
+.login-root {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.login-title {
+  margin: 0 0 1rem 0;
+  text-align: left;
+  font-weight: 600;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.sign-in-button {
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(244, 67, 54, 0.06);
+  color: #b00020;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.warn-icon {
+  font-size: 18px;
+}
