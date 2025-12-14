@@ -8,7 +8,7 @@ namespace FlatHunt.Server.Controllers
 {
     [ApiController]
     [Route("api/flats")]
-    //[Authorize(Roles = $"{Roles.Broker},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.Broker},{Roles.Admin}")]
     public class FlatsController : ControllerBase
     {
         private readonly IFlatsService _service;

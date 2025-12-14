@@ -1,16 +1,30 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
-// Example minimal routes using standalone component lazy load.
-// Adjust import paths if you placed the component elsewhere.
-export const routes: Routes = [
-  { path: 'login', loadComponent: () => import('./login.component').then(m => m.LoginComponent) },
-  //{ path: 'home', loadComponent: () => import('./home.component').then(m => m.HomeComponent) }, // replace with your home component
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'flats',
+    loadComponent: () => import('./flats/flats.component').then(m => m.FlatsComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    redirectTo: 'flats',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'flats'
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

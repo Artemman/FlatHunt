@@ -1,5 +1,4 @@
 using FlatHunt.Server.DI;
-using Microsoft.Extensions.Configuration;
 
 namespace FlatHunt.Server
 {
@@ -11,6 +10,12 @@ namespace FlatHunt.Server
 
             ConfigureServices(builder.Services, builder.Configuration);
 
+            builder.Services.AddCors(b => b.AddDefaultPolicy(p =>
+                   p.WithOrigins("https://localhost:60107")
+                   .AllowCredentials()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader())
+            );
             builder.Services.AddControllers();
             AuthRegistrator.AddAuth(builder.Services, builder.Configuration);
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -29,10 +34,9 @@ namespace FlatHunt.Server
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-
-
 
             app.MapControllers();
 

@@ -13,6 +13,8 @@ namespace FlatHunt.Server.DI
             var lunApiUrl = configuration.GetValue<string>("LunApi:Url");
 
             ArgumentNullException.ThrowIfNull(lunApiUrl);
+
+            services.AddTransient<LunMessageHandler>();
             services.AddRefitClient<ILunClient>(GetRefitSettings())
              .ConfigureHttpClient((_, client) =>
              {

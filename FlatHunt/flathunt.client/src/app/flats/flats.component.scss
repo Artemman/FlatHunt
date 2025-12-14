@@ -1,0 +1,51 @@
+.flats-card {
+  padding: 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.filters-form {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+  align-items: center;
+}
+
+.flats-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.spinner {
+  display: block;
+  margin: 1rem auto;
+}
+
+.error {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: rgba(0,0,0,0.87);
+  padding: 0.5rem;
+  background: rgba(244,67,54,0.04);
+  border-radius: 4px;
+}
+
+.empty {
+  padding: 1rem;
+  text-align: center;
+  color: rgba(0,0,0,0.6);
+}

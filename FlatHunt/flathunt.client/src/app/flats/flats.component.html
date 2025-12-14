@@ -1,0 +1,112 @@
+<mat-card class="flats-card">
+  <mat-card-title>Flats</mat-card-title>
+
+  <div class="filters">
+    <form [formGroup]="filterForm" class="filters-form" (ngSubmit)="$event.preventDefault()">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Address or title" formControlName="search" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rooms</mat-label>
+        <mat-select formControlName="rooms">
+          <mat-option [value]="null">Any</mat-option>
+          <mat-option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min price</mat-label>
+        <input matInput type="number" formControlName="minPrice" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Max price</mat-label>
+        <input matInput type="number" formControlName="maxPrice" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sort</mat-label>
+        <mat-select formControlName="sortBy">
+          <mat-option value="createdAt">Newest</mat-option>
+          <mat-option value="price">Price</mat-option>
+          <mat-option value="area">Area</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Direction</mat-label>
+        <mat-select formControlName="sortDir">
+          <mat-option value="desc">Desc</mat-option>
+          <mat-option value="asc">Asc</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-stroked-button type="button" (click)="clearFilters()">Clear</button>
+        <button mat-flat-button color="primary" type="button" (click)="retry()">Apply</button>
+      </div>
+    </form>
+  </div>
+
+  <mat-progress-spinner *ngIf="isLoading" class="spinner" mode="indeterminate" diameter="36"></mat-progress-spinner>
+
+  <div *ngIf="error" class="error">
+    <mat-icon color="warn">error</mat-icon>
+    <span>{{ error }}</span>
+    <button mat-button (click)="retry()">Retry</button>
+  </div>
+
+  <div *ngIf="!isLoading && !error">
+    <table mat-table [dataSource]="data" class="mat-elevation-z1 flats-table" *ngIf="data && data.length > 0">
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let row"> {{ row.title || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef>Address</th>
+        <td mat-cell *matCellDef="let row"> {{ row.address || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cityId">
+        <th mat-header-cell *matHeaderCellDef>City</th>
+        <td mat-cell *matCellDef="let row"> {{ row.cityId || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rooms">
+        <th mat-header-cell *matHeaderCellDef>Rooms</th>
+        <td mat-cell *matCellDef="let row"> {{ row.rooms }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="area">
+        <th mat-header-cell *matHeaderCellDef>Area</th>
+        <td mat-cell *matCellDef="let row"> {{ row.area ?? '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let row"> {{ row.price ?? '-' }} {{ row.currency || '' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="brokerName">
+        <th mat-header-cell *matHeaderCellDef>Broker</th>
+        <td mat-cell *matCellDef="let row"> {{ row.brokerName || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let row"> {{ row.createdAt ? (row.createdAt | date:'short') : '-' }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div *ngIf="!data || data.length === 0" class="empty">No flats found.</div>
+
+    <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageIndex]="pageIndex"></mat-paginator>
+  </div>
+</mat-card>

@@ -10,7 +10,7 @@ namespace FlatHunt.Server.Controllers
     
     [ApiController]
     [Route("api/flat-sync")]
-    [Authorize(Roles = $"{Roles.Admin},{Roles.Broker}")]
+    [Authorize(Roles = $"{Roles.Broker},{Roles.Admin}")]
     public class FlatSyncController : ControllerBase
     {
         private readonly IFlatSyncService _flatSyncService;

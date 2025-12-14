@@ -1,22 +1,48 @@
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthService } from './auth/auth.service';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { ApiUrlInterceptor } from './core/interceptors/api-url.interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+export function initAuthFactory(auth: AuthService) {
+  return async () => {
+    try {
+      if (auth.isAuthenticated()) {
+        if (auth.isAccessTokenExpired() && !auth.isRefreshTokenExpired()) {
+          await auth.refreshToken().toPromise();
+        }
+      }
+    } catch {
+      auth.logout('/login');
+    }
+  };
+}
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule,
-    AppRoutingModule
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [
-    provideAnimationsAsync()
+    { provide: HTTP_INTERCEPTORS, useClass: ApiUrlInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initAuthFactory,
+      deps: [AuthService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

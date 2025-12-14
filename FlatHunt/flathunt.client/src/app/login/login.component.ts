@@ -4,8 +4,6 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormControl } 
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, EMPTY } from 'rxjs';
 import { take, takeUntil, finalize, catchError } from 'rxjs/operators';
-
-// Angular Material modules
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AuthService, User } from './auth/auth.service';
+import { AuthService, User } from '../auth/auth.service';
 
 interface ILoginForm {
   email: FormControl<string | null>;
