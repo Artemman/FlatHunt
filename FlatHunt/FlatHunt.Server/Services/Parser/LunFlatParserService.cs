@@ -5,6 +5,7 @@ using FlatHunt.Server.Services.FlatProviders.Lun.Interfaces;
 using FlatHunt.Server.Services.Parser.Interfaces;
 using FlatHunt.Server.Services.Parser.Models;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace FlatHunt.Server.Services.Parser
 {
@@ -34,31 +35,18 @@ namespace FlatHunt.Server.Services.Parser
         {
             string geoId = await GetLunGeoId(filter.CityId);
 
-
             var response = await _lunClient.GetRealtiesAsync(Language, SectionId,
                 filter.RoomCount, filter.Page, geoId, filter.PageSize);
 
-            if (!response.IsSuccessStatusCode
-                || response.Content == null)
-            {
-                //TODO use custom exception type 
-                //remove IsSuccessStatusCode it after handler will be added 
-                throw new Exception("Lun API unavailable");
-            }
-
             //todo add serilog/nlog sinks and logging to file on debug
-
-#if DEBUG
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content));
-#endif
-            if (response.Content.Cards == null
-                || response.Content.Cards.Count == 0) 
+            if (response.Cards == null
+                || response.Cards.Count == 0) 
             {
                 return [];
             }
 
             var advertisements = new List<Advertisement>();
-            response.Content.Cards.ForEach(card => Parse(card, advertisements));
+            response.Cards.ForEach(card => Parse(card, advertisements, filter.CityId));
 
             await _advertisementRepository.SaveChanges();
 
@@ -73,15 +61,16 @@ namespace FlatHunt.Server.Services.Parser
             return city.LunCity.GeoId;
         }
 
-        private void Parse(LunCardDto card, List<Advertisement> advertisements)
+        private void Parse(LunCardDto card, List<Advertisement> advertisements, int cityId)
         {
             //todo add deduplication service 
+
             var advertisement = new Advertisement()
             {
                 FlatSourceType = FlatSourceType.Lun,
                 ExternalId = card.Id.ToString(),
                 Url = card.UrlRaw!,
-                Title = card.Header!,
+                Title = $"{card.RoomCount} кімнатна на {card.Header!}",
                 Description = card.Text!,
                 Price = card.Price,
                 Flat = new()
@@ -90,12 +79,14 @@ namespace FlatHunt.Server.Services.Parser
                     Floor = card.Floor,
                     AreaTotal = card.AreaTotal,
                     FloorCount = card.FloorCount
-                }
+                },
+                CityId = cityId,
+                CreatedAt = card.InsertTime,
+                Address = card.Name ?? card.Header
             };
 
             advertisements.Add(advertisement);
             _advertisementRepository.Add(advertisement);
-            
         }
     }
 }

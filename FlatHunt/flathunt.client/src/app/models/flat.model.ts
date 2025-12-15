@@ -2,13 +2,14 @@ export interface FlatDto {
   id: number;
   title?: string | null;
   address?: string | null;
-  cityId?: number | null;
+  city?: number | null;
   rooms: number;
   area?: number | null;
   price?: number | null;
   currency?: string | null;
   isActive: boolean;
   createdAt?: string | null;
+  externalId?: string | null;
 }
 
 export interface FlatFilterRequest {

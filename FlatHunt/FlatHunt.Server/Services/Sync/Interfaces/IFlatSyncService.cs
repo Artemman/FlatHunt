@@ -6,6 +6,6 @@ namespace FlatHunt.Server.Services.Sync.Interfaces
     public interface IFlatSyncService
     {
         //TODO use jobs
-        Task<List<Advertisement>> SyncFlats(FlatSyncFilter filter);
+        Task<int> SyncFlats(FlatSyncFilter filter);
     }
 }

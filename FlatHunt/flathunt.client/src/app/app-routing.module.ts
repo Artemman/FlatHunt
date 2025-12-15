@@ -13,6 +13,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'parser',
+    loadComponent: () => import('./parser/parser.component').then(m => m.ParserComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     redirectTo: 'flats',
     pathMatch: 'full'

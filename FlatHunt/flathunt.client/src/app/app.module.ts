@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ApiUrlInterceptor } from './core/interceptors/api-url.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppHeaderComponent } from './app-header/app-header.component';
 
 export function initAuthFactory(auth: AuthService) {
   return async () => {
@@ -30,7 +31,8 @@ export function initAuthFactory(auth: AuthService) {
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AppHeaderComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiUrlInterceptor, multi: true },

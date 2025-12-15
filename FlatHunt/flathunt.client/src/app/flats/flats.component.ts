@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FlatsService } from '../services/flats.service';
 import { FlatDto, FlatFilterRequest } from '../models/flat.model';
 import { merge, Subject, debounceTime, distinctUntilChanged, switchMap, startWith, takeUntil, catchError, of, finalize } from 'rxjs';
+import { CitiesService, CityDto } from '../services/cities.service';
 
 @Component({
   selector: 'app-flats',
@@ -36,20 +37,22 @@ import { merge, Subject, debounceTime, distinctUntilChanged, switchMap, startWit
 export class FlatsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns = ['title', 'address', 'cityId', 'rooms', 'area', 'price', 'brokerName', 'createdAt'];
+  displayedColumns = ['title', 'address', 'city', 'rooms', 'area', 'price', 'createdAt', 'externalId'];
   data: FlatDto[] = [];
   totalCount = 0;
-  pageSize = 5;
+  pageSize = 20;
   pageIndex = 0;
   isLoading = false;
   error: string | null = null;
+  cities: CityDto[] = [];
+  citiesLoading = false;
 
   filterForm: FormGroup<any>;
 
   private refresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private service: FlatsService) {
+  constructor(private fb: FormBuilder, private service: FlatsService, private citiesService: CitiesService) {
     this.filterForm = this.fb.group({
     search: [''],
     cityId: [null],
@@ -75,29 +78,27 @@ export class FlatsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.paginator?.firstPage?.();
         this.refresh$.next();
       });
+
+      this.loadCities();
   }
 
   ngAfterViewInit(): void {
     const paginator$ = this.paginator.page.pipe(startWith({ pageIndex: this.pageIndex, pageSize: this.pageSize }));
-    const initialPage = { pageIndex: this.pageIndex, pageSize: this.pageSize } as PageEvent;
-    merge(this.refresh$.pipe(startWith(initialPage)), paginator$)
+    
+    merge(this.refresh$, paginator$)
       .pipe(
         takeUntil(this.destroy$),
         switchMap((evt) => {
           this.isLoading = true;
           this.error = null;
-
-          const f = this.buildFilterRequest();
-          if ((evt as PageEvent).pageIndex != null) {
-            const pe = evt as PageEvent;
-            f.page = pe.pageIndex + 1;
-            f.pageSize = pe.pageSize;
+          
+          const pe = evt as PageEvent | undefined;
+          if (pe?.pageIndex != null) {
             this.pageIndex = pe.pageIndex;
             this.pageSize = pe.pageSize;
-          } else {
-            f.page = this.pageIndex + 1;
-            f.pageSize = this.pageSize;
           }
+          
+          const f = this.buildFilterRequest();
 
           return this.service.getFlats(f).pipe(
             catchError(err => {
@@ -160,4 +161,19 @@ export class FlatsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  private loadCities(): void {
+    this.citiesLoading = true;
+    this.citiesService.getCities()
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => {
+          return of([]);
+        }),
+        finalize(() => (this.citiesLoading = false))
+      )
+      .subscribe((c) => {
+        this.cities = c || [];
+      });
+  } 
 }

@@ -18,7 +18,7 @@ namespace FlatHunt.Server.Services.Flats
             var page = Math.Max(1, filter.Page);
             var pageSize = Math.Clamp(filter.PageSize, 1, 100);
 
-            var (items, total) = await _repo.GetFilteredAsync(filter, ct).ConfigureAwait(false);
+            var (items, total) = await _repo.GetFilteredAsync(filter).ConfigureAwait(false);
 
             var totalPages = (int)Math.Ceiling(total / (double)pageSize);
 

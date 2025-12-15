@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" class="app-toolbar mat-elevation-z4">
+  <div class="toolbar-left">
+    <button mat-icon-button class="hamburger" [matMenuTriggerFor]="navMenu" aria-label="Open navigation menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <a class="app-title" routerLink="/" aria-label="Home">
+      <mat-icon aria-hidden="false" aria-label="home">home</mat-icon>
+      <span class="title-text">FlatHunt</span>
+    </a>
+
+    <nav class="nav-links" role="navigation" aria-label="Primary">
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link
+           routerLink="/flats"
+           routerLinkActive #rFlats="routerLinkActive"
+           [active]="rFlats.isActive"
+           *ngIf="showFlats$ | async">
+          Flats
+        </a>
+
+        <a mat-tab-link
+           routerLink="/parser"
+           routerLinkActive #rParser="routerLinkActive"
+           [active]="rParser.isActive"
+           *ngIf="showParser$ | async">
+          Parser
+        </a>
+      </nav>
+    </nav>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="toolbar-right">
+    <button mat-button class="user-btn" [matMenuTriggerFor]="userMenu" *ngIf="userDisplayName$ | async as displayName" matTooltip="Account">
+      <mat-icon>account_circle</mat-icon>
+      <span class="user-name">{{ displayName }}</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+
+    @if((showFlats$ | async) || (showParser$ | async)){
+    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Logout" aria-label="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  }
+  </div>
+</mat-toolbar>
+
+<!-- Navigation menu used on small screens (triggered by hamburger) -->
+<mat-menu #navMenu="matMenu">
+  <button mat-menu-item *ngIf="showFlats$ | async" (click)="navigate('/flats')">
+    <mat-icon>home</mat-icon>
+    <span>Flats</span>
+  </button>
+
+  <button mat-menu-item *ngIf="showParser$ | async" (click)="navigate('/parser')">
+    <mat-icon>science</mat-icon>
+    <span>Parser</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
+
+<!-- User menu (profile + logout) -->
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item disabled>
+    <mat-icon>person</mat-icon>
+    <div class="user-info">
+      <div class="user-name-menu" *ngIf="userDisplayName$ | async as dn">{{ dn }}</div>
+    </div>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

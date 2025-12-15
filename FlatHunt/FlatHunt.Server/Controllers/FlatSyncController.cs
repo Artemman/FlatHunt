@@ -21,7 +21,7 @@ namespace FlatHunt.Server.Controllers
         }
 
         [HttpPost]
-        public Task<List<Advertisement>> SyncFlats(FlatSyncFilter filter)
+        public Task<int> SyncFlats(FlatSyncFilter filter)
         {
             return _flatSyncService.SyncFlats(filter);
         }

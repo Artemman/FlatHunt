@@ -14,7 +14,7 @@ namespace FlatHunt.Server.Repositories
             _db = db;
         }
 
-        public async Task<(List<FlatDto> Items, long TotalCount)> GetFilteredAsync(FlatFilterRequest filter, CancellationToken ct = default)
+        public async Task<(List<FlatDto> Items, long TotalCount)> GetFilteredAsync(FlatFilterRequest filter)
         {
             var page = Math.Max(1, filter.Page);
             var pageSize = Math.Clamp(filter.PageSize, 1, 100);
@@ -69,12 +69,12 @@ namespace FlatHunt.Server.Repositories
 
             if (filter.CityId.HasValue)
             {
-                //baseQuery = baseQuery.Where(x =>
-                //    x.Ad != null && x.Ad.CityId == filter.CityId.Value);
+                baseQuery = baseQuery.Where(x =>
+                    x.Ad != null && x.Ad.CityId == filter.CityId.Value);
             }
 
             // Total count before pagination
-            var totalCount = await baseQuery.LongCountAsync(ct).ConfigureAwait(false);
+            var totalCount = await baseQuery.LongCountAsync().ConfigureAwait(false);
 
             // Sorting
             var sortBy = (filter.SortBy ?? "").ToLowerInvariant();
@@ -102,15 +102,16 @@ namespace FlatHunt.Server.Repositories
                     Id = x.Flat.Id,
                     Title = x.Ad != null ? x.Ad.Title : null,
                     Address = x.Ad != null ? x.Ad.Address : null,
-                    CityId = null, // adapt if City relation exists
+                    City = x.Ad.City.Name, 
                     Rooms = x.Flat.RoomCount,
                     Area = x.Flat.AreaTotal,
                     Price = x.Ad != null ? x.Ad.Price : (decimal?)null,
                     Currency = x.Ad != null ? x.Ad.Currency : null,
                     IsActive = true,
-                    CreatedAt = x.Ad != null ? x.Ad.CreatedAt : null
+                    CreatedAt = x.Ad != null ? x.Ad.CreatedAt : null,
+                    ExternalId = x.Ad.ExternalId
                 })
-                .ToListAsync(ct)
+                .ToListAsync()
                 .ConfigureAwait(false);
 
             return (paged, totalCount);

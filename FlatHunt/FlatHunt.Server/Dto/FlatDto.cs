@@ -10,7 +10,7 @@ namespace FlatHunt.Server.Dto
 
         public string? Address { get; init; }
 
-        public int? CityId { get; init; }
+        public string? City { get; init; }
 
         public int Rooms { get; init; }
 
@@ -23,5 +23,7 @@ namespace FlatHunt.Server.Dto
         public bool IsActive { get; init; }
 
         public DateTime? CreatedAt { get; init; }
+
+        public string? ExternalId { get; set; }
     }
 }

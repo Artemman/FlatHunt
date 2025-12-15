@@ -35,5 +35,6 @@
 
         public decimal? AreaTotal { get; set; }
 
+        public string? Name { get; set; }
     }
 }

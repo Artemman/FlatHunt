@@ -10,6 +10,8 @@ namespace FlatHunt.Server.Repositories.Interfaces
 
         Task<TEntity?> GetById(int entityId, params Expression<Func<TEntity, object>>[] includes);
 
+        Task<List<TEntity>> GetAll(params Expression<Func<TEntity, object>>[] includes);
+
         Task SaveChanges();
     }
 }

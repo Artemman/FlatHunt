@@ -17,7 +17,7 @@ namespace FlatHunt.Server.Services.Sync
 
         }
 
-        public async Task<List<Advertisement>> SyncFlats(FlatSyncFilter filter)
+        public async Task<int> SyncFlats(FlatSyncFilter filter)
         {
             var syncId = Guid.NewGuid();
             _logger.LogInformation("Start sync advertisements session id: {0}", syncId);
@@ -27,7 +27,7 @@ namespace FlatHunt.Server.Services.Sync
 
             _logger.LogInformation("End sync advertisements session id: {0}, count: {1}", syncId, advertisements.Count);
 
-            return advertisements;
+            return advertisements.Count;
         }
 
         private IFlatParserService GetParser(FlatSourceType source)

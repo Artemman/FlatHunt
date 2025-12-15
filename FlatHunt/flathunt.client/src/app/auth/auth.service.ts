@@ -21,7 +21,7 @@ export interface UserTokenPaiload {
   email: string;
   name: string;
   exp: number;
-  role: string[]
+  role: string[] | string;
 }
 
 export interface AuthResponse {
@@ -101,7 +101,7 @@ export class AuthService {
       id : Number.parseInt(tokenPaiload.sub, 10),
       email: tokenPaiload.email,
       name: tokenPaiload.name,
-      roles: tokenPaiload.role,
+      roles: ([] as string[]).concat(tokenPaiload.role ?? []),
       expireAt: new Date(tokenPaiload.exp * 1000)
     };
 

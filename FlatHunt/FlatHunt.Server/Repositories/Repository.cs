@@ -56,5 +56,10 @@ namespace FlatHunt.Server.Repositories
         {
             return _context.SaveChangesAsync();
         }
+
+        public Task<List<TEntity>> GetAll(params Expression<Func<TEntity, object>>[] includes)
+        {
+            return Query(includes).ToListAsync();
+        }
     }
 }

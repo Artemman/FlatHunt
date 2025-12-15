@@ -7,7 +7,7 @@ namespace FlatHunt.Server.Services.FlatProviders.Lun.Interfaces
     {
         //add handler and remove IApiResponse
         [Get("/api/v2/market/realties")]
-        Task<IApiResponse<LunResponseDto>> GetRealtiesAsync(
+        Task<LunResponseDto> GetRealtiesAsync(
         [AliasAs("language")] string language,
         [AliasAs("sectionId")] int sectionId,
         [AliasAs("roomCount")] int roomCount,
